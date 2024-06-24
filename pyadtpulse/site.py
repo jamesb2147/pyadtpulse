@@ -38,6 +38,7 @@ class ADTPulseSite(object):
         self._id = site_id
         self._name = name
         self._zones = []
+	self._other_devices = []
         self._status = ADT_ALARM_UNKNOWN
 
         self._update_alarm_status(summary_html_soup)
@@ -109,6 +110,15 @@ class ADTPulseSite(object):
         return self.fetch_zones()
 
     @property
+    def other_devices(self):
+	"""Return all other devices registered with the ADT Pulse account (cached copy)
+	   See Also fetch_other_devices()"""
+	if self._other_devices:
+	    return self._other_devices()
+
+        return self.fetch_other_devices()
+
+    @property
     def history(self):
         """Returns log of history for this zone (NOT IMPLEMENTED)"""
         return []
@@ -140,6 +150,8 @@ class ADTPulseSite(object):
         # if we should also update the zone details, force a fresh fetch of data from ADT Pulse
         if update_zones:
             self.fetch_zones()
+	if update_other_devices:
+	    self.fetch_other_devices()
 
     def fetch_zones(self):
         """Fetch a fresh copy of the zone data from ADT Pulse service"""
@@ -253,6 +265,10 @@ class ADTPulseSite(object):
 
         self._zones = zones
         return zones
+
+    def fetch_other_devices(self):
+	other_devices = []
+	return other_devices
 
     def fetch_zones_OLD(self):
         """Fetch a fresh copy of the zone data from ADT Pulse service"""
